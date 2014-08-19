@@ -47,13 +47,17 @@ module Database
       "PGPASSWORD='#{@config['password']}'" if @config['password']
     end
 
+    def dump_extra_options
+      @cap.fetch(:db_dump_extra_options)
+    end
+
   private
 
     def dump_cmd
       if mysql?
-        "mysqldump #{credentials} #{database} --lock-tables=false"
+        "mysqldump #{credentials} #{database} --lock-tables=false #{dump_extra_options}"
       elsif postgresql?
-        "#{pgpass} pg_dump --no-acl --no-owner #{credentials} #{database}"
+        "#{pgpass} pg_dump --no-acl --no-owner #{dump_extra_options} #{credentials} #{database}"
       end
     end
 
